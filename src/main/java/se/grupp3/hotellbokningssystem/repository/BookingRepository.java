@@ -5,22 +5,32 @@ import se.grupp3.hotellbokningssystem.model.Booking;
 import se.grupp3.hotellbokningssystem.model.BookingStatus;
 import se.grupp3.hotellbokningssystem.model.RoomType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class BookingRepository {
-    private ArrayList<Booking> bookings;
+    private final ArrayList<Booking> bookings;
+    private int nextId;
 
     public BookingRepository(){
         bookings = new ArrayList<>();
+        nextId = 0;
 
-        bookings.add(new Booking(0, "A Testsson", 1, RoomType.SINGLE, 1, 1, BookingStatus.CONFIRMED));
-        bookings.add(new Booking(1, "B Testsson", 1, RoomType.DOUBLE, 1, 1, BookingStatus.CONFIRMED));
-        bookings.add(new Booking(2, "C Testsson", 1, RoomType.SUITE, 1, 1, BookingStatus.CONFIRMED));
+        this.addBooking(new Booking(null, "A Testsson", 1, RoomType.SINGLE, 1, 1, BookingStatus.CONFIRMED));
+        this.addBooking(new Booking(null, "B Testsson", 1, RoomType.DOUBLE, 1, 1, BookingStatus.CONFIRMED));
+        this.addBooking(new Booking(null, "C Testsson", 1, RoomType.SUITE, 1, 1, BookingStatus.CONFIRMED));
     }
 
-    public List<Booking> getBookings(){
+    public Collection<Booking> getBookings(){
         return bookings;
+    }
+
+    public void addBooking(Booking booking){
+        booking.setId(nextId++);
+        bookings.add(booking);
+    }
+
+    public long getNrOfBookedRooms(RoomType roomType){
+        return bookings.stream().filter(b -> b.getRoomType() == roomType).count();
     }
 }
