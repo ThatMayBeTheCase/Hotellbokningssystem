@@ -19,4 +19,23 @@ public class BookingRulesService {
             throw new IllegalArgumentException("Too many guests for room type " + roomType + ". Max allowed: " + roomType.getMaxGuests());
         }
     }
+
+    public Integer calculateTotalPrice(RoomType roomType, Integer nights) {
+        if (roomType == null) {
+            throw new IllegalArgumentException("Room type is required.");
+        }
+
+        if (nights == null || nights < 1) {
+            throw new IllegalArgumentException("Nights must be at least 1.");
+        }
+
+        int pricePerNight = switch (roomType) {
+            case SINGLE -> 1000;
+            case DOUBLE -> 1500;
+            case SUITE -> 2500;
+        };
+        return pricePerNight * nights;
+
+    }
 }
+
