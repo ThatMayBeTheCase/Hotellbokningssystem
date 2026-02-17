@@ -33,4 +33,23 @@ public class BookingRepository {
     public long getNrOfBookedRooms(RoomType roomType){
         return bookings.stream().filter(b -> b.getRoomType() == roomType).count();
     }
+
+    public Booking getBookingById(String id){
+        try {
+            int numericId = Integer.parseInt(id);
+            return bookings.stream()
+                    .filter(b -> b.getId() == numericId)
+                    .findFirst()
+                    .orElse(null);
+            }
+        catch (NumberFormatException e) {
+            return null; }
+    }
+
+    public void removeBooking(String id) {
+        Booking booking = getBookingById(id);
+            if (booking != null) {
+                bookings.remove(booking);
+            }
+    }
 }

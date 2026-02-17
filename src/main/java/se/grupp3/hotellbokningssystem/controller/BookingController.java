@@ -19,12 +19,12 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @GetMapping("bookings/")
+    @GetMapping("/bookings")
     public ResponseEntity<?> getBookings(){
         return ResponseEntity.ok(bookingService.getBookings().stream().map(BookingResponse::new));
     }
 
-    @PostMapping("bookings/")
+    @PostMapping("/bookings")
     public ResponseEntity<?> createBooking(@Valid @RequestBody BookingRequest bookingRequest) throws Exception {
         Booking b = bookingService.createBooking(bookingRequest.getGuestName(), bookingRequest.getNights(), bookingRequest.getGuestCount(), bookingRequest.getRoomType());
 
