@@ -48,7 +48,7 @@ public class BookingController {
         );
     }
 
-    @GetMapping("/admin/bookings/{id}")
+    @GetMapping("/bookings/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable Integer id) {
         BookingResponse response = bookingService.getBookingById(id);
