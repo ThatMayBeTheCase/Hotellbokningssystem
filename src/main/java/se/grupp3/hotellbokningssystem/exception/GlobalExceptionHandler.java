@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
         error.put("error", "Room not available");
         error.put("message", ex.getMessage());
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
 
