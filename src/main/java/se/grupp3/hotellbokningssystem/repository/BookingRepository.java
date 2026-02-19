@@ -16,13 +16,17 @@ public class BookingRepository {
         bookings = new ArrayList<>();
         nextId = 0;
 
-        this.addBooking(new Booking(null, "A Testsson", 1, RoomType.SINGLE, 1, 1, BookingStatus.CONFIRMED));
-        this.addBooking(new Booking(null, "B Testsson", 1, RoomType.DOUBLE, 1, 1, BookingStatus.CONFIRMED));
-        this.addBooking(new Booking(null, "C Testsson", 1, RoomType.SUITE, 1, 1, BookingStatus.CONFIRMED));
+        this.addBooking(new Booking(null, "Test", "A Testsson", 1, RoomType.SINGLE, 1, 1, BookingStatus.CONFIRMED));
+        this.addBooking(new Booking(null, "Test", "B Testsson", 1, RoomType.DOUBLE, 1, 1, BookingStatus.CONFIRMED));
+        this.addBooking(new Booking(null, "Test", "C Testsson", 1, RoomType.SUITE, 1, 1, BookingStatus.CONFIRMED));
     }
 
     public Collection<Booking> getBookings(){
         return bookings;
+    }
+
+    public Collection<Booking> getBookingsByUserName(String userName){
+        return bookings.stream().filter(b -> Objects.equals(b.getUserName(), userName)).toList();
     }
 
     public void addBooking(Booking booking){

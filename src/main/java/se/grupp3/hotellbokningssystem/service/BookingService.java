@@ -1,5 +1,6 @@
 package se.grupp3.hotellbokningssystem.service;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import se.grupp3.hotellbokningssystem.dto.BookingResponse;
 import se.grupp3.hotellbokningssystem.exception.OutOfRoomsException;
@@ -11,6 +12,7 @@ import se.grupp3.hotellbokningssystem.exception.BookingNotFoundException;
 
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Service
 public class BookingService {
@@ -21,18 +23,22 @@ public class BookingService {
         this.bookingRepository = bookingRepository;
     }
 
-    public Collection<Booking> getBookings(){
-        return this.bookingRepository.getBookings();
+    public Collection<Booking> getBookings(Authentication authentication){
+        if(authentication.getAuthorities().stream().anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_ADMIN"))){
+            return bookingRepository.getBookings();
+        } else {
+            return bookingRepository.getBookingsByUserName(authentication.getName());
+        }
     }
 
-    public Booking createBooking(String guestName, Integer nights, Integer guestCount, RoomType roomType) throws IllegalArgumentException, OutOfRoomsException {
+    public Booking createBooking(Authentication authentication, String guestName, Integer nights, Integer guestCount, RoomType roomType) throws IllegalArgumentException, OutOfRoomsException {
         validateGuestCount(roomType, guestCount);
 
         if(this.bookingRepository.getNrOfBookedRooms(roomType) >= roomType.getNrOfRooms()){
             throw new OutOfRoomsException(roomType);
         }
 
-        Booking b = new Booking(null, guestName, guestCount, roomType, nights, calculateTotalPrice(roomType, nights), BookingStatus.CONFIRMED);
+        Booking b = new Booking(null, authentication.getName(), guestName, guestCount, roomType, nights, calculateTotalPrice(roomType, nights), BookingStatus.CONFIRMED);
 
         bookingRepository.addBooking(b);
 
