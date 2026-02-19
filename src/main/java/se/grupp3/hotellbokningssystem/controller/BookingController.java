@@ -34,7 +34,7 @@ public class BookingController {
 
     @PostMapping("/bookings")
     public ResponseEntity<?> createBooking(Authentication authentication, @Valid @RequestBody BookingRequest bookingRequest) throws Exception {
-        Booking b = bookingService.createBooking(authentication, bookingRequest.getGuestName(), bookingRequest.getNights(), bookingRequest.getGuestCount(), bookingRequest.getRoomType());
+        Booking b = bookingService.createBooking(authentication, bookingRequest.getGuestName(), bookingRequest.getGuestCount(), bookingRequest.getRoomType(), bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new BookingResponse(b));
     }

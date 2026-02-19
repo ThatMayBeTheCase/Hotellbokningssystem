@@ -4,6 +4,6 @@ import se.grupp3.hotellbokningssystem.model.RoomType;
 
 public class OutOfRoomsException extends Exception {
     public OutOfRoomsException(RoomType roomType){
-        super("No more rooms of type " + roomType);
+        super("No rooms of type " + roomType + " are available at this time.");
     }
 }
