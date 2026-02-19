@@ -5,6 +5,9 @@ import se.grupp3.hotellbokningssystem.model.BookingStatus;
 
 public class BookingResponse {
     private Integer bookingNumber;
+    private String guestName;
+    private String roomType;
+    private Integer nights;
     private Integer totalPrice;
     private BookingStatus status;
 
@@ -19,6 +22,9 @@ public class BookingResponse {
 
     public BookingResponse(Booking booking){
         this.bookingNumber = booking.getId();
+        this.guestName = booking.getGuestName();
+        this.roomType = booking.getRoomType().toString();
+        this.nights = booking.getNights();
         this.totalPrice = booking.getTotalPrice();
         this.status = booking.getStatus();
     }
@@ -30,6 +36,18 @@ public class BookingResponse {
     public void setBookingNumber(Integer bookingNumber) {
         this.bookingNumber = bookingNumber;
     }
+
+    public String getGuestName() { return guestName; }
+
+    public void setGuestName(String guestName) { this.guestName = guestName; }
+
+    public String getRoomType() { return roomType; }
+
+    public void setRoomType(String roomType) { this.roomType = roomType; }
+
+    public Integer getNights() { return nights; }
+
+    public void setNights(Integer nights) { this.nights = nights; }
 
     public Integer getTotalPrice() {
         return totalPrice;
