@@ -34,22 +34,21 @@ public class BookingRepository {
         return bookings.stream().filter(b -> b.getRoomType() == roomType).count();
     }
 
-    public Booking getBookingById(String id){
-        try {
-            int numericId = Integer.parseInt(id);
-            return bookings.stream()
-                    .filter(b -> b.getId() == numericId)
-                    .findFirst()
-                    .orElse(null);
-            }
-        catch (NumberFormatException e) {
-            return null; }
+    public Booking getBookingById(int id){
+        return bookings.stream()
+                .filter(b -> b.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
-    public void removeBooking(String id) {
+    public void removeBooking(int id) {
         Booking booking = getBookingById(id);
-            if (booking != null) {
-                bookings.remove(booking);
-            }
+        if (booking != null) {
+            bookings.remove(booking);
+        }
+    }
+
+    public void deleteBooking(int id) {
+        removeBooking(id);
     }
 }

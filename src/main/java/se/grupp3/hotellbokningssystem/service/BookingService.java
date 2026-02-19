@@ -64,11 +64,14 @@ public class BookingService {
         return roomType.getPricePerNight() * nights;
     }
 
-    public void deleteBooking(String id) {
+    public void deleteBooking(int id) {
         Booking booking = bookingRepository.getBookingById(id);
-            if (booking == null) {
-                throw new BookingNotFoundException("Booking with id " + id + " not found.");
-            }
-            bookingRepository.removeBooking(id);
+
+        if (booking == null) {
+            throw new BookingNotFoundException("Booking with id " + id + " not found");
+        }
+
+        bookingRepository.deleteBooking(id);
     }
+
 }

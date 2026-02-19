@@ -13,6 +13,11 @@ import se.grupp3.hotellbokningssystem.dto.BookingResponse;
 import se.grupp3.hotellbokningssystem.exception.OutOfRoomsException;
 import se.grupp3.hotellbokningssystem.model.Booking;
 import se.grupp3.hotellbokningssystem.service.BookingService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import java.util.Map;
+
 
 @RestController
 public class BookingController {
@@ -20,7 +25,7 @@ public class BookingController {
     private BookingService bookingService;
 
     @GetMapping("/bookings")
-    public ResponseEntity<?> getBookings(){
+    public ResponseEntity<?> getBookings() {
         return ResponseEntity.ok(bookingService.getBookings().stream().map(BookingResponse::new));
     }
 
@@ -29,5 +34,16 @@ public class BookingController {
         Booking b = bookingService.createBooking(bookingRequest.getGuestName(), bookingRequest.getNights(), bookingRequest.getGuestCount(), bookingRequest.getRoomType());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new BookingResponse(b));
+    }
+
+    @DeleteMapping("/bookings/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteBooking(@PathVariable int id){
+
+        bookingService.deleteBooking(id);
+
+        return ResponseEntity.ok(
+                Map.of("message", "Booking with id " + id + " has been deleted.")
+        );
     }
 }
