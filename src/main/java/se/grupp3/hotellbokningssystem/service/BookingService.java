@@ -2,6 +2,7 @@ package se.grupp3.hotellbokningssystem.service;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import se.grupp3.hotellbokningssystem.dto.BookingResponse;
 import se.grupp3.hotellbokningssystem.exception.OutOfRoomsException;
 import se.grupp3.hotellbokningssystem.model.Booking;
 import se.grupp3.hotellbokningssystem.model.BookingStatus;
@@ -78,6 +79,15 @@ public class BookingService {
         }
 
         bookingRepository.deleteBooking(id);
+    }
+    public BookingResponse getBookingById(Integer id) {
+        Booking booking = bookingRepository.getBookingById(id);
+
+        if (booking == null) {
+            throw new BookingNotFoundException("Booking with id " + id + " not found");
+        }
+
+        return new BookingResponse(booking);
     }
 
 }
