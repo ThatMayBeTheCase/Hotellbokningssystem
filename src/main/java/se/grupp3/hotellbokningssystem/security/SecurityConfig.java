@@ -32,7 +32,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/bookings/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/bookings/**").hasAnyRole("USER")
                         .anyRequest().authenticated()

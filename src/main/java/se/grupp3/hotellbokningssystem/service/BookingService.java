@@ -11,6 +11,7 @@ import se.grupp3.hotellbokningssystem.repository.BookingRepository;
 import se.grupp3.hotellbokningssystem.exception.BookingNotFoundException;
 
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -21,6 +22,11 @@ public class BookingService {
 
     public BookingService(BookingRepository bookingRepository){
         this.bookingRepository = bookingRepository;
+
+        this.bookingRepository.addBooking(new Booking(null, "user", "A Testsson", 1, RoomType.SINGLE, 1, BookingStatus.CONFIRMED, 1, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7)));
+        this.bookingRepository.addBooking(new Booking(null, "user", "B Testsson", 1, RoomType.DOUBLE, 1, BookingStatus.CONFIRMED, 1, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7)));
+        this.bookingRepository.addBooking(new Booking(null, "user", "C Testsson", 1, RoomType.SUITE, 1, BookingStatus.CONFIRMED,  1, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7)));
+
     }
 
     public Collection<Booking> getBookings(Authentication authentication){
@@ -31,18 +37,33 @@ public class BookingService {
         }
     }
 
-    public Booking createBooking(Authentication authentication, String guestName, Integer nights, Integer guestCount, RoomType roomType) throws IllegalArgumentException, OutOfRoomsException {
+    public Booking createBooking(Authentication authentication, String guestName, Integer guestCount, RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate) throws IllegalArgumentException, OutOfRoomsException {
         validateGuestCount(roomType, guestCount);
+        validateDates(checkInDate, checkOutDate);
 
-        if(this.bookingRepository.getNrOfBookedRooms(roomType) >= roomType.getNrOfRooms()){
+        int[] availableRooms = bookingRepository.getAvailableRooms(checkInDate, checkOutDate, roomType);
+
+        if(availableRooms.length == 0){
             throw new OutOfRoomsException(roomType);
         }
 
-        Booking b = new Booking(null, authentication.getName(), guestName, guestCount, roomType, nights, calculateTotalPrice(roomType, nights), BookingStatus.CONFIRMED);
+        int nrOfNights = (int) (checkOutDate.toEpochDay() - checkInDate.toEpochDay());
+
+        Booking b = new Booking(null, authentication.getName(), guestName, guestCount, roomType, calculateTotalPrice(roomType, nrOfNights), BookingStatus.CONFIRMED, availableRooms[0], checkInDate, checkOutDate);
 
         bookingRepository.addBooking(b);
 
         return b;
+    }
+
+    public void deleteBooking(int id) {
+        Booking booking = bookingRepository.getBookingById(id);
+
+        if (booking == null) {
+            throw new BookingNotFoundException("Booking with id " + id + " not found");
+        }
+
+        bookingRepository.deleteBooking(id);
     }
 
     public static void validateGuestCount(RoomType roomType, Integer guestCount) {
@@ -59,27 +80,36 @@ public class BookingService {
         }
     }
 
-    public static Integer calculateTotalPrice(RoomType roomType, Integer nights) {
+    public static Integer calculateTotalPrice(RoomType roomType, int nights) {
         if (roomType == null) {
             throw new IllegalArgumentException("Room type is required.");
         }
 
-        if (nights == null || nights < 1) {
+        if (nights < 1) {
             throw new IllegalArgumentException("Nights must be at least 1.");
         }
 
         return roomType.getPricePerNight() * nights;
     }
 
-    public void deleteBooking(int id) {
-        Booking booking = bookingRepository.getBookingById(id);
-
-        if (booking == null) {
-            throw new BookingNotFoundException("Booking with id " + id + " not found");
+    public static void validateDates(LocalDate checkInDate, LocalDate checkOutDate){
+        if(checkInDate == null){
+            throw new IllegalArgumentException("The check in date is required.");
         }
 
-        bookingRepository.deleteBooking(id);
+        if(checkOutDate == null){
+            throw new IllegalArgumentException("The check out date is required.");
+        }
+
+        if(checkInDate.isBefore(LocalDate.now())){
+            throw new IllegalArgumentException("The check in date must not be before the current date.");
+        }
+
+        if(!checkInDate.isBefore(checkOutDate)){
+            throw new IllegalArgumentException("The check out date must be after the check in date.");
+        }
     }
+
     public BookingResponse getBookingById(Integer id) {
         Booking booking = bookingRepository.getBookingById(id);
 
@@ -89,5 +119,4 @@ public class BookingService {
 
         return new BookingResponse(booking);
     }
-
 }

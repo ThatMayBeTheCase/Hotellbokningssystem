@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import se.grupp3.hotellbokningssystem.model.RoomType;
 
+import java.time.LocalDate;
+
 
 public class BookingRequest {
 
@@ -18,18 +20,21 @@ public class BookingRequest {
     @NotNull(message = "Room type is required")
     private RoomType roomType;
 
-    @NotNull(message = "Nights is required.")
-    @Min(value = 1, message = "Nights must be at least 1")
-    private Integer nights;
+    @NotNull(message = "Check in date is required.")
+    private LocalDate checkInDate;
+
+    @NotNull(message = "Check out date is required.")
+    private LocalDate checkOutDate;
 
     public BookingRequest() {
     }
 
-    public BookingRequest(String guestName, Integer guestCount, RoomType roomType, Integer nights) {
+    public BookingRequest(String guestName, Integer guestCount, RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate) {
         this.guestName = guestName;
         this.guestCount = guestCount;
         this.roomType = roomType;
-        this.nights = nights;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
     }
 
     public String getGuestName() {
@@ -56,11 +61,19 @@ public class BookingRequest {
         this.roomType = roomType;
     }
 
-    public Integer getNights() {
-        return nights;
+    public LocalDate getCheckInDate() {
+        return checkInDate;
     }
 
-    public void setNights(Integer nights) {
-        this.nights = nights;
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(LocalDate checkOutDate) {
+        this.checkOutDate = checkOutDate;
     }
 }

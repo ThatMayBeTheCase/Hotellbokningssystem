@@ -11,7 +11,6 @@ import se.grupp3.hotellbokningssystem.security.JwtUtil;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired

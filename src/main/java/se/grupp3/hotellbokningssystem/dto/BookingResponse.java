@@ -3,10 +3,14 @@ package se.grupp3.hotellbokningssystem.dto;
 import se.grupp3.hotellbokningssystem.model.Booking;
 import se.grupp3.hotellbokningssystem.model.BookingStatus;
 
+import java.time.LocalDate;
+
 public class BookingResponse {
     private Integer bookingNumber;
     private String guestName;
     private String roomType;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
     private Integer nights;
     private Integer totalPrice;
     private BookingStatus status;
@@ -24,7 +28,9 @@ public class BookingResponse {
         this.bookingNumber = booking.getId();
         this.guestName = booking.getGuestName();
         this.roomType = booking.getRoomType().toString();
-        this.nights = booking.getNights();
+        this.checkInDate = booking.getCheckInDate();
+        this.checkOutDate = booking.getCheckOutDate();
+        this.nights = (int) (booking.getCheckOutDate().toEpochDay() - booking.getCheckInDate().toEpochDay());
         this.totalPrice = booking.getTotalPrice();
         this.status = booking.getStatus();
     }
@@ -63,5 +69,21 @@ public class BookingResponse {
 
     public void setStatus(BookingStatus status) {
         this.status = status;
+    }
+
+    public LocalDate getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(LocalDate checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public LocalDate getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(LocalDate checkOutDate) {
+        this.checkOutDate = checkOutDate;
     }
 }
