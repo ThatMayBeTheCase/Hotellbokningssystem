@@ -2,6 +2,7 @@ package se.grupp3.hotellbokningssystem.model;
 
 public class Booking {
     private Integer id;
+    private final String userName;
     private String guestName;
     private Integer guestCount;
     private RoomType roomType;
@@ -9,11 +10,9 @@ public class Booking {
     private Integer totalPrice;
     private BookingStatus status;
 
-    public Booking() {
-    }
-
-    public Booking(Integer id, String guestName, Integer guestCount, RoomType roomType, Integer nights, Integer totalPrice, BookingStatus status) {
+    public Booking(Integer id, String userName, String guestName, Integer guestCount, RoomType roomType, Integer nights, Integer totalPrice, BookingStatus status) {
         this.id = id;
+        this.userName = userName;
         this.guestName = guestName;
         this.guestCount = guestCount;
         this.roomType = roomType;
@@ -76,5 +75,9 @@ public class Booking {
 
     public void setStatus(BookingStatus status) {
         this.status = status;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }
