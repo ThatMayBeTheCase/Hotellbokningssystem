@@ -6,6 +6,8 @@ import se.grupp3.hotellbokningssystem.model.Booking;
 import se.grupp3.hotellbokningssystem.model.BookingStatus;
 import se.grupp3.hotellbokningssystem.model.RoomType;
 import se.grupp3.hotellbokningssystem.repository.BookingRepository;
+import se.grupp3.hotellbokningssystem.exception.BookingNotFoundException;
+
 
 import java.util.Collection;
 
@@ -61,4 +63,15 @@ public class BookingService {
 
         return roomType.getPricePerNight() * nights;
     }
+
+    public void deleteBooking(int id) {
+        Booking booking = bookingRepository.getBookingById(id);
+
+        if (booking == null) {
+            throw new BookingNotFoundException("Booking with id " + id + " not found");
+        }
+
+        bookingRepository.deleteBooking(id);
+    }
+
 }
