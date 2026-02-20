@@ -15,7 +15,7 @@ Applikationen körs på: `http://localhost:8080`
 | Metod | Endpoint | Beskrivning | Roll |
 |-------|----------|-------------|------|
 | POST | `/login` | Logga in och få JWT-token | Alla |
-| GET | `/bookings` | Hämta alla bokningar | USER, ADMIN |
+| GET | `/bookings` | Hämta alla bokningar | USER(Egna),ADMIN(Alla) |
 | POST | `/bookings` | Skapa ny bokning | USER |
 | GET | `/bookings/{id}` | Hämta specifik bokning | ADMIN |
 | DELETE | `/bookings/{id}` | Ta bort bokning | ADMIN |
