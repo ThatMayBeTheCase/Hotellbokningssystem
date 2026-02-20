@@ -11,7 +11,9 @@ import se.grupp3.hotellbokningssystem.repository.BookingRepository;
 import se.grupp3.hotellbokningssystem.exception.BookingNotFoundException;
 
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -47,9 +49,7 @@ public class BookingService {
             throw new OutOfRoomsException(roomType);
         }
 
-        int nrOfNights = (int) (checkOutDate.toEpochDay() - checkInDate.toEpochDay());
-
-        Booking b = new Booking(null, authentication.getName(), guestName, guestCount, roomType, calculateTotalPrice(roomType, nrOfNights), BookingStatus.CONFIRMED, availableRooms[0], checkInDate, checkOutDate);
+        Booking b = new Booking(null, authentication.getName(), guestName, guestCount, roomType, calculateTotalPrice(roomType, checkInDate, checkOutDate), BookingStatus.CONFIRMED, availableRooms[0], checkInDate, checkOutDate);
 
         bookingRepository.addBooking(b);
 
@@ -80,16 +80,22 @@ public class BookingService {
         }
     }
 
-    public static Integer calculateTotalPrice(RoomType roomType, int nights) {
+    public static int calculateTotalPrice(RoomType roomType, LocalDate checkInDate, LocalDate checkOutDate) {
+        long nrOfNights = checkInDate.until(checkOutDate, ChronoUnit.DAYS);
+
         if (roomType == null) {
             throw new IllegalArgumentException("Room type is required.");
         }
 
-        if (nights < 1) {
+        if (nrOfNights < 1) {
             throw new IllegalArgumentException("Nights must be at least 1.");
         }
 
-        return roomType.getPricePerNight() * nights;
+        long nrOfWeekendNights = checkInDate.datesUntil(checkOutDate)
+                .filter(d -> d.getDayOfWeek() == DayOfWeek.FRIDAY || d.getDayOfWeek() == DayOfWeek.SATURDAY)
+                .count();
+
+        return (int) (roomType.getPricePerNight() * nrOfNights + nrOfWeekendNights * roomType.getPricePerNight() * 0.2);
     }
 
     public static void validateDates(LocalDate checkInDate, LocalDate checkOutDate){
