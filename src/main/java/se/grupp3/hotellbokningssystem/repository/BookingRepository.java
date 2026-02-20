@@ -2,7 +2,6 @@ package se.grupp3.hotellbokningssystem.repository;
 
 import org.springframework.stereotype.Repository;
 import se.grupp3.hotellbokningssystem.model.Booking;
-import se.grupp3.hotellbokningssystem.model.BookingStatus;
 import se.grupp3.hotellbokningssystem.model.RoomType;
 
 import java.time.LocalDate;
@@ -45,10 +44,6 @@ public class BookingRepository {
         bookings.add(booking);
     }
 
-    public long getNrOfBookedRooms(RoomType roomType){
-        return bookings.stream().filter(b -> b.getRoomType() == roomType).count();
-    }
-
     public Booking getBookingById(int id){
         return bookings.stream()
                 .filter(b -> b.getId() == id)
@@ -56,14 +51,11 @@ public class BookingRepository {
                 .orElse(null);
     }
 
-    public void removeBooking(int id) {
+    public void deleteBooking(int id) {
         Booking booking = getBookingById(id);
+
         if (booking != null) {
             bookings.remove(booking);
         }
-    }
-
-    public void deleteBooking(int id) {
-        removeBooking(id);
     }
 }

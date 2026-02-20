@@ -2,6 +2,9 @@ package se.grupp3.hotellbokningssystem.service;
 
 import org.junit.jupiter.api.Test;
 import se.grupp3.hotellbokningssystem.model.RoomType;
+
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookingServiceTest {
@@ -26,7 +29,14 @@ public class BookingServiceTest {
     }
 
     @Test
-    void calculateTotalPrice_returnsExpectedPrice() {
-        assertEquals(3000, BookingService.calculateTotalPrice(RoomType.SINGLE, 3));
+    void calculateTotalPriceDuringWeekdays_returnsExpectedPrice() {
+        // Interval contains only weekdays
+        assertEquals(3000, BookingService.calculateTotalPrice(RoomType.SINGLE, LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 4)));
+    }
+
+    @Test
+    void calculateTotalPriceDuringWeekend_returnsExpectedPrice() {
+        // Interval contains a weekend
+        assertEquals(3400, BookingService.calculateTotalPrice(RoomType.SINGLE, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 4)));
     }
 }
